@@ -36,3 +36,142 @@
     transform: rotate(360deg);
   }
 }
+
+body {
+  background: url('https://example.com/your-dark-background.jpg') no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Cinzel', serif; /* 판타지 느낌의 폰트 */
+  color: #f5f5f5; /* 밝은 색 텍스트 */
+}
+
+.header {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #ffcc00; /* 헤더 텍스트를 황금색으로 설정 */
+  text-shadow: 2px 2px #000; /* 텍스트 그림자로 가독성 향상 */
+}
+
+.nickname-setup, .user-input {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+input[type="text"] {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 2px solid #ffcc00; /* 노란 테두리로 강조 */
+  background: #333; /* 어두운 배경 */
+  color: #f5f5f5;
+}
+
+body {
+  background-color: #1e1e1e; /* 어두운 배경색 */
+  font-family: 'Cinzel', serif; /* 판타지 느낌의 폰트 */
+  color: #f5f5f5; /* 기본 텍스트를 밝은 색으로 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.App {
+  text-align: center;
+  /*width: 800px;
+  max-width: 800px;*/
+  padding: 2rem;
+}
+
+.header {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #ffcc00; /* 헤더 텍스트를 황금색으로 설정 */
+  text-shadow: 2px 2px #000; /* 텍스트 그림자로 가독성 향상 */
+}
+
+.nickname-setup, .user-input {
+  margin-top: 2rem;
+}
+
+input[type="text"] {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 2px solid #ffcc00; /* 노란 테두리로 강조 */
+  background: #f5f5f5; /* 밝은 배경 */
+  color: #333; /* 어두운 텍스트 */
+}
+
+button {
+  background: #ffcc00; /* 밝은 색 버튼 */
+  color: #333; /* 버튼 텍스트를 어두운 색으로 */
+  padding: 0.7rem 1.5rem;
+  margin-left: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.5s, transform 0.2s;
+}
+
+button:hover {
+  background: #ffd700; /* 버튼 호버 시 더 밝은 노란색으로 */
+  transform: scale(1.05);
+}
+
+.story-display {
+  margin-top: 2rem;
+  text-align: center;
+  padding: 1rem;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.7); /* 투명한 검정 배경 */
+  color: #ffcc00; /* 황금색 텍스트 */
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+  transition: opacity 1s ease-in-out;
+}
+
+.story-display.hidden {
+  opacity: 0;
+}
+
+.story-display.visible {
+  opacity: 1;
+}
+
+.theme-setup button {
+  background: #ff8a00; /* 주제 버튼을 밝은 색으로 설정 */
+  color: #fff;
+  padding: 0.7rem 1.5rem;
+  margin: 0.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.5s, transform 0.2s;
+}
+
+.theme-setup button:hover {
+  background: #ffa726; /* 호버 시 더 밝은 색 */
+  transform: scale(1.05);
+}
+
+/* 커스텀 스크롤바 */
+.custom-display::-webkit-scrollbar {
+  width: 12px; /* 스크롤바 너비 */
+}
+
+.custom-display::-webkit-scrollbar-track {
+  background: #333; /* 스크롤바 트랙 배경 */
+  border-radius: 8px; /* 스크롤바 트랙 둥글게 */
+}
+
+.custom-display::-webkit-scrollbar-thumb {
+  background: #888; /* 스크롤바 색상 */
+  border-radius: 8px; /* 스크롤바 모서리 둥글게 */
+}
+
+.custom-display::-webkit-scrollbar-thumb:hover {
+  background: #555; /* 스크롤바 호버 시 색상 */
+}
