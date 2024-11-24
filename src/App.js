@@ -239,8 +239,8 @@ export default function App() {
         },
         body: JSON.stringify({
           prompt: `주인공 이름: ${nickname}님이 선택한 주제: ${theme}, 
-            종족: ${race}, 
-            직업: ${job}로 진행, 
+            ${nickname}님의 종족: ${race}, 
+            ${nickname}님의 직업: ${job}로 진행,
             행동: ${input}로 진행,
             이전 이야기: ${lastStory},
             종족 스킬: ${raceSkills.join(', ')}, 직업 스킬: ${jobSkills.join(', ')}`
@@ -315,7 +315,9 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           prompt: `
-            주인공 이름: ${nickname}, 주제: ${theme}, 종족(${race}), 직업(${job}),
+            주인공 이름: ${nickname}님이 선택한 주제: ${theme}, 
+            ${nickname}님의 종족: ${race}, 
+            ${nickname}님의 직업: ${job}로 진행,
             이전 이야기: ${lastStory},
             주사위 결과: ${diceSum} (${actionResult}), 
             관련 능력: ${relevantStat}.`,
