@@ -90,6 +90,7 @@ function Dice({ position, rollDiceFunctionRef, setDiceResult }) {
 
 export default function App() {
   const chatLogRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태
   const [inputValue, setInputValue] = useState('');
   const [nickname, setNickname] = useState("");
   const [isNicknameSet, setIsNicknameSet] = useState(false);
@@ -156,6 +157,7 @@ export default function App() {
       
       const raceSkillsString = raceSkills.join(', ');
       const jobSkillsString = jobSkills.join(', ');
+      setIsLoading(true);
 
       const response = await fetch('/api/gpt/preferences', {
         method: 'POST',
@@ -163,7 +165,12 @@ export default function App() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          prompt: `${nickname}님이 선택한 주제(${theme}), 종족(${race}), 직업(${job})로 진행:\n종족 스킬: ${raceSkillsString}\n직업 스킬: ${jobSkillsString}`,
+          prompt: `유저 이름: ${nickname}님이 선택한 주제: ${theme}, 
+          ${nickname}님의 종족: ${race}, 
+          ${nickname}님의 직업: ${job}로 진행,
+          종족 스킬: ${raceSkillsString},
+          직업 스킬: ${jobSkillsString}
+          `,
         }),
       });
       
@@ -203,6 +210,7 @@ export default function App() {
         return newLog;
       });
     } finally {
+      setIsLoading(false);
       setStoryVisible(true);
     }
   };
@@ -211,11 +219,17 @@ export default function App() {
   const handleUserInput = async (input) => {
     setStoryVisible(false);
     setChatLog(prevLog => [...prevLog, `${nickname}: ${input}`]); // 사용자 입력을 로그에 추가
+    setTimeout(() => {
+      if (chatLogRef.current) {
+        chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight; // 로그창을 맨 아래로 스크롤
+      }
+    }, 0);
     setInputck(false);
     setUserActionExamples([]);
     const lastStory = chatLog[chatLog.length - 1]; // 마지막 이야기
     const raceSkills = gameData.raceSkills[theme]?.[race] || [];
     const jobSkills = gameData.jobSkills[theme]?.[job] || [];
+    setIsLoading(true);
     
     try {
       const response = await fetch('/api/gpt/handleUserInput', {
@@ -224,7 +238,7 @@ export default function App() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          prompt: `주인공 이름: ${nickname}님이 선택한 주제: ${theme}, 
+          prompt: `유저 이름: ${nickname}님이 선택한 주제: ${theme}, 
             ${nickname}님의 종족: ${race}, 
             ${nickname}님의 직업: ${job}로 진행,
             행동: ${input}로 진행,
@@ -285,6 +299,7 @@ export default function App() {
         return newLog;
       });
     } finally {
+      setIsLoading(false);
       setStoryVisible(true);
     }
   };
@@ -295,14 +310,14 @@ export default function App() {
     const diceSum = dice1 + dice2 + dice3;
     const actionResult = success ? '성공' : '실패';
     const lastStory = chatLog[chatLog.length - 2]; // 마지막 이야기
+    setIsLoading(true);
   
     try {
       const response = await fetch('/api/gpt/continueStory', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          prompt: `
-            주인공 이름: ${nickname}님이 선택한 주제: ${theme}, 
+          prompt: `유저 이름: ${nickname}님이 선택한 주제: ${theme}, 
             ${nickname}님의 종족: ${race}, 
             ${nickname}님의 직업: ${job}로 진행,
             이전 이야기: ${lastStory},
@@ -356,6 +371,7 @@ export default function App() {
       setChatLog((prevLog) => [...prevLog, '시스템: 다음 이야기를 가져오는 중 오류가 발생했습니다.']);
       console.error('GPT API 호출 중 오류 발생:', error);
     } finally {
+      setIsLoading(false);
       setStoryVisible(true);
     }
   };
@@ -375,6 +391,11 @@ export default function App() {
       ...prevLog,
       resultMessage,
     ]);
+    setTimeout(() => {
+      if (chatLogRef.current) {
+        chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight; // 로그창을 맨 아래로 스크롤
+      }
+    }, 0);
   
     setIsRollDiceModalOpen(false); // 주사위 모달 닫기
   };
@@ -579,12 +600,10 @@ export default function App() {
               <div className={`custom-display ${storyVisible ? 'visible' : 'hidden'}`} 
                 style={{ margin: '20px auto 0 auto',  height: '40vh', overflowY: 'auto', padding: '10px', border: '1px solid white', backgroundColor: '#222', borderRadius: '8px', width: '600px' }} ref={chatLogRef}>
                 {chatLog.map((line, index) => {
-                  // React 요소인 경우 그대로 렌더링
                   if (React.isValidElement(line)) {
                     return <div key={index}>{line}</div>;
                   }
 
-                  // 문자열인 경우 처리
                   if (typeof line === 'string') {
                     return (
                       <div
@@ -665,6 +684,20 @@ export default function App() {
                   // 처리되지 않은 데이터는 무시
                   return null;
                 })}
+                {/* 로딩 메시지 추가 */}
+                {isLoading && (
+                    <div
+                      style={{
+                        marginTop: '10px',
+                        padding: '10px',
+                        color: 'white',
+                        textAlign: 'center',
+                        borderRadius: '8px',
+                      }}
+                    >
+                      스토리를 생성 중입니다...
+                    </div>
+                  )}
               </div>
             </div>
 

@@ -10,7 +10,7 @@ const openai = new OpenAIApi({
   apiKey: process.env.OPENAI_API_KEY, // 환경 변수에서 API 키 가져오기
 });
 // 서버 포트 설정
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3002;
 
 app.post('/api/gpt/test', async (req, res) => {
   const { prompt } = req.body;
@@ -32,9 +32,8 @@ app.post('/api/gpt/preferences', async (req, res) => {
       messages: [
         {
           role: 'system',
-          content: `
-          한글로 답변해야해
-          당신은 1인 TRPG 게임 설정을 도와주는 전문 운영자입니다. 사용자가 제공하는 게임 주제, 종족, 직업 정보를 바탕으로 다음과 같은 세부 내용을 생성합니다:
+          content: `한글로 답변해야해
+          당신은 1인 TRPG 게임 설정을 도와주는 전문 운영자입니다. 사용자가 제공하는 게임 주제, 종족, 직업, 스킬 정보를 바탕으로 다음과 같은 세부 내용을 생성합니다:
 
           1. 게임의 구체적인 테마 (detailedTheme): 주제와 관련된 흥미로운 설정을 설명합니다.
           2. 게임의 시대 (timePeriod): 이야기가 진행될 시대적 배경을 설정합니다.
@@ -76,7 +75,6 @@ app.post('/api/gpt/preferences', async (req, res) => {
       gptResponse.story_start_situation &&
       Array.isArray(gptResponse.examples)
     ) {
-      console.log(gptResponse);
       res.json(gptResponse);
     } else {
       throw new Error('GPT 응답이 예상한 JSON 구조와 다릅니다.');
@@ -102,7 +100,7 @@ app.post('/api/gpt/handleUserInput', async (req, res) => {
         {
           role: 'system',
           content: `한글로 답변해야해
-          당신은 1인 TRPG 운영자입니다. 유저와 상호작용하며 TRPG 세션을 진행합니다. 유저는 특정 주제, 종족, 직업, 그리고 행동을 선택하며 이야기를 전개합니다.
+          당신은 1인 TRPG 운영자입니다. 유저와 상호작용하며 TRPG 세션을 진행합니다. 유저는 특정 주제, 종족, 직업, 스킬 그리고 행동을 선택하며 이야기를 전개합니다.
           ### 역할:
           1. 유저의 입력 데이터(주제, 종족, 직업, 행동)를 기반으로 스토리를 진행합니다.
           2. 스토리는 유저가 선택한 **주제와 테마**를 항상 유지해야 하며, 입력된 데이터와 동떨어지지 않게 작성합니다.
@@ -148,7 +146,6 @@ app.post('/api/gpt/handleUserInput', async (req, res) => {
     ) {
       res.json(gptResponse);
     } else {
-      console.error('유효하지 않은 GPT 응답:', gptResponse);
       throw new Error('GPT 응답이 예상한 JSON 구조와 다릅니다.');
     }
   } catch (error) {
@@ -159,7 +156,6 @@ app.post('/api/gpt/handleUserInput', async (req, res) => {
 
 app.post('/api/gpt/continueStory', async (req, res) => {
   const { prompt } = req.body;
-  //console.log("이전 이야기: ", prompt);
 
   if (!prompt || typeof prompt !== 'string') {
     return res.status(400).json({ error: '유효하지 않은 요청입니다. prompt를 제공해주세요.' });
@@ -211,7 +207,6 @@ app.post('/api/gpt/continueStory', async (req, res) => {
     ) {
       res.json(gptResponse);
     } else {
-      //console.error('유효하지 않은 GPT 응답:', gptResponse);
       throw new Error('GPT 응답이 예상한 JSON 구조와 다릅니다.');
     }
   } catch (error) {
