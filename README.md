@@ -1,71 +1,21 @@
-# Getting Started with Create React App
+AI 기반 TRPG 게임
+설명:
+이 프로젝트는 AI와 3D 기술을 활용하여 유저 선택 기반으로 진행되는 1인용 TRPG(Tabletop Role-Playing Game)를 제공합니다. ChatGPT를 사용해 스토리를 생성하고, Three.js 기반 주사위 시뮬레이션을 통해 몰입감을 높였습니다.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+주요 기능
+캐릭터 생성 및 상태 관리
 
-## Available Scripts
+주사위를 굴려 종족, 직업, 능력치를 랜덤으로 생성.
+자동으로 테마에 맞는 스킬과 상태를 설정.
+AI 기반 스토리 진행
 
-In the project directory, you can run:
+ChatGPT API를 사용해 유저 행동에 따른 스토리를 실시간 생성.
+다양한 선택지와 상황을 제공하여 유저 맞춤형 경험을 지원.
+3D 주사위 시뮬레이션
 
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-"# web-trpg" 
+Three.js를 사용해 주사위 애니메이션을 구현.
+주사위 결과를 게임 내 이벤트와 연동.
+프로젝트 구성
+Frontend: React를 사용해 UI와 게임 화면을 구성.
+Backend: Express.js와 ChatGPT API를 활용한 스토리 생성 로직 구현.
+3D 그래픽: Three.js로 제작된 주사위 시뮬레이션.
