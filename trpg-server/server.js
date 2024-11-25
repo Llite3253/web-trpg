@@ -129,9 +129,6 @@ app.post('/api/gpt/handleUserInput', async (req, res) => {
             "examples": ["string", "string", "string"], // 유저가 선택할 수 있는 다음 행동 3가지를 제공하고 적이 생성됬으면 전투와 관련된 예시를 제공한다.
             "requires_roll": "boolean", // 주사위를 굴릴 필요가 있는지 여부
             "relevant_stat": "string",  // 주사위를 굴려야 할 경우 관련된 스탯 (힘, 민첩, 지능 중 하나)
-            "enemy": "boolean", // 적 생성 여부
-            "enemy_name": "string", // 적 생성 시 상황과 스토리에 맞게 이름 부여
-            "enemy_hp": number // 적 생성 시 체력 부여
           }
           `
         },
@@ -147,9 +144,7 @@ app.post('/api/gpt/handleUserInput', async (req, res) => {
       gptResponse.story_situation &&
       Array.isArray(gptResponse.examples) &&
       typeof gptResponse.requires_roll === 'boolean' &&
-      typeof gptResponse.enemy === 'boolean' &&
-      (gptResponse.requires_roll === false || gptResponse.relevant_stat) &&
-      (gptResponse.enemy === false || gptResponse.enemy_name && gptResponse.enemy_hp)
+      (gptResponse.requires_roll === false || gptResponse.relevant_stat)
     ) {
       res.json(gptResponse);
     } else {

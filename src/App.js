@@ -98,12 +98,13 @@ export default function App() {
   const [storyVisible, setStoryVisible] = useState(true);
   const [race, setRace] = useState('');
   const [job, setJob] = useState('');
-  const [stats, setStats] = useState({ str: 0, dex: 0, int: 0, hp: 0 });
+  const [stats, setStats] = useState({ str: 0, dex: 0, int: 0 });
   const [rolling, setRolling] = useState(false);
   const [isJobConfirmed, setIsJobConfirmed] = useState(false);
   const [isDiceConfirmed, setIsDiceConfirmed] = useState(false);
   const [isStatsConfirmed, setIsStatsConfirmed] = useState(false);
   const [userActionExamples, setUserActionExamples] = useState([]);
+  const [inputck, setInputck] = useState(false);
   const [isRollDiceModalOpen, setIsRollDiceModalOpen] = useState(false);
   const [relevantStat, setRelevantStat] = useState('');
   const rollDiceFunctionRef1 = useRef(null);
@@ -146,23 +147,6 @@ export default function App() {
     setIsThemeSet(true);
   };
 
-  // 테스트
-  const testInput = async (input) => {
-    try {
-      const response = await fetch('/api/gpt/test', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          prompt: `${input}`,
-        }),
-      });
-    } catch (error) {
-      
-    }
-  };
-
   // 시작 기본설정
   const preferencesUserInput = async () => {
     setStoryVisible(false);
@@ -185,6 +169,7 @@ export default function App() {
       
 
       const data = await response.json();
+      setInputck(true);
       setUserActionExamples(data.examples);
       if (data.story_theme && data.story_era && data.story_place && data.story_mood && data.story_start_situation) {
         setChatLog(prevLog => {
@@ -226,6 +211,7 @@ export default function App() {
   const handleUserInput = async (input) => {
     setStoryVisible(false);
     setChatLog(prevLog => [...prevLog, `${nickname}: ${input}`]); // 사용자 입력을 로그에 추가
+    setInputck(false);
     setUserActionExamples([]);
     const lastStory = chatLog[chatLog.length - 1]; // 마지막 이야기
     const raceSkills = gameData.raceSkills[theme]?.[race] || [];
@@ -285,6 +271,7 @@ export default function App() {
       });
 
       if (!data.requires_roll) {
+        setInputck(true);
         setUserActionExamples(data.examples);
       }
     } catch (error) {
@@ -362,6 +349,7 @@ export default function App() {
       });
 
       if (!data.requires_roll) {
+        setInputck(true);
         setUserActionExamples(data.examples);
       }
     } catch (error) {
@@ -410,15 +398,14 @@ export default function App() {
   }, [diceResult3, diceResult4, jobList]);
 
   useEffect(() => {
-    if (diceResultStats1 && diceResultStats2 && diceResultStats3 && stats.str + stats.dex + stats.int + stats.hp === 0) {
+    if (diceResultStats1 && diceResultStats2 && diceResultStats3 && stats.str + stats.dex + stats.int === 0) {
       setStats({
         str : diceResultStats1 + gameData.raceStats[theme][race].str,
         dex : diceResultStats2 + gameData.raceStats[theme][race].dex,
         int : diceResultStats3 + gameData.raceStats[theme][race].int,
-        hp : diceResultStats1 + diceResultStats2 + diceResultStats3 + gameData.raceStats[theme][race].hp,
       });
     }
-  }, [diceResultStats1, diceResultStats2, diceResultStats3, stats]);
+  }, [diceResultStats1, diceResultStats2, diceResultStats3, stats, theme, race]);
 
   return (
     <div className="App">
@@ -562,18 +549,15 @@ export default function App() {
               <Dice position={[4, 0, 0]} rollDiceFunctionRef={rollDiceFunctionRefStats3} setDiceResult={setDiceResultStats3} />
             </Canvas>
           </div>
-          {stats.str + stats.dex + stats.int + stats.hp > 0 && (
+          {stats.str + stats.dex + stats.int > 0 && (
             <div style={{ marginTop: '20px' }}>
-              <h2>당신의 스탯은 [힘 : {stats.str}, 민첩 : {stats.dex}, 지능 : {stats.int}, 체력 : {stats.hp}] 입니다.</h2>
+              <h2>당신의 스탯은 [힘 : {stats.str}, 민첩 : {stats.dex}, 지능 : {stats.int}] 입니다.</h2>
               <button onClick={() => {setIsStatsConfirmed(true); preferencesUserInput(); setRolling(false);}}>스탯 설정 완료</button>
             </div>
           )}
         </div>
       ) : (
         <>
-          <header className="header">
-            <h2>AI TRPG</h2>
-          </header>
           <div className="App" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             {/* 스킬 창 */}
             <div className="custom-display" style={{ flex: 1, marginRight: '20px', marginTop: '20px', textAlign: 'center' }}>
@@ -713,43 +697,44 @@ export default function App() {
                     <th style={{ border: '1px solid white', padding: '8px' }}>지능</th>
                     <td style={{ border: '1px solid white', padding: '8px' }}>{stats.int}</td>
                   </tr>
-                  <tr>
-                    <th style={{ border: '1px solid white', padding: '8px' }}>체력</th>
-                    <td style={{ border: '1px solid white', padding: '8px' }}>{stats.hp}</td>
-                  </tr>
                 </tbody>
               </table>
             </div>
           </div>
-          <div className="user-input">
-          <input style={{width: '490px'}}
-            type="text"
-            placeholder="당신의 행동을 입력하세요"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
+
+          {inputck && !isRollDiceModalOpen && (
+            <>
+              <div className="user-input">
+              <input style={{width: '490px'}}
+                type="text"
+                placeholder="당신의 행동을 입력하세요"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleUserInput(inputValue);
+                    setInputValue('');
+                  }
+                }}
+              />
+              <button onClick={() => {
                 handleUserInput(inputValue);
                 setInputValue('');
-              }
-            }}
-          />
-          <button onClick={() => {
-            handleUserInput(inputValue);
-            setInputValue('');
-          }}>행동하기</button>
-          </div>
-          <div className="user-actions" style={{ marginTop: '20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <h3>유저 행동 예시:</h3>
-            {userActionExamples && userActionExamples.map((example, index) => (
-              <button key={index} style={{ margin: '5px', padding: '10px', backgroundColor: '#444', color: 'white', border: 'none', borderRadius: '5px', width: '600px' }}
-                onClick={() => {
-                  handleUserInput(example);
-                }}>
-                {example}
-              </button>
-            ))}
-          </div>
+              }}>행동하기</button>
+              </div>
+              <div className="user-actions" style={{ marginTop: '20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <h3>유저 행동 예시:</h3>
+                {userActionExamples && userActionExamples.map((example, index) => (
+                  <button key={index} style={{ margin: '5px', padding: '10px', backgroundColor: '#444', color: 'white', border: 'none', borderRadius: '5px', width: '600px' }}
+                    onClick={() => {
+                      handleUserInput(example);
+                    }}>
+                    {example}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
 
           {isRollDiceModalOpen && (
             <div
